@@ -1,21 +1,30 @@
-- [] start prisma schema
+- [x] create next application
 
-- [] create tables:
-    - [] users:
+- [x] add prisma schema
+
+- [x] create tables:
+    - [x] users:
         - id,
         - name,
         - email,
         - avatar_url,
         - createdAt,
 
-    - [] books: 
+    - [x] books: 
         - id,
         - name,
         - author,
         - pages,
+        - summary,
         - cover,
         - category,
+        - createdAt,
 
-    - [] ratings: 
-        - date,
+    - [x] ratings: 
+        - rate,
+        - createdAt,
+
+- [x] add oAuth
+
+- [x] create prisma adapter
 
