@@ -3,28 +3,17 @@
 - [x] add prisma schema
 
 - [x] create tables:
-    - [x] users:
-        - id,
-        - name,
-        - email,
-        - avatar_url,
-        - createdAt,
-
-    - [x] books: 
-        - id,
-        - name,
-        - author,
-        - pages,
-        - summary,
-        - cover,
-        - category,
-        - createdAt,
-
-    - [x] ratings: 
-        - rate,
-        - createdAt,
+  - [x] users
+  - [x] books
+  - [x] ratings
+  - [x] accounts
+  - [x] sessions
 
 - [x] add oAuth
 
 - [x] create prisma adapter
 
+- [] create api routes
+  - [x] user
+  - [] book
+  - [] rating
