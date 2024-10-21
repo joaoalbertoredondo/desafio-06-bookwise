@@ -14,11 +14,16 @@ export default async function handler(
 
   if (!ratingId) {
     res.status(400).json({ message: "Rating Id not provided." })
+    return
   }
 
   const rating = await prisma.rating.findUnique({
     where: {
       id: ratingId,
+    },
+    include: {
+      Book: {},
+      User: {},
     },
   })
 

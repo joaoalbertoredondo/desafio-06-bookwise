@@ -7,12 +7,14 @@ export default async function handler(
 ) {
   if (req.method !== "DELETE") {
     res.status(501).json({ message: "Method not implemented." })
+    return
   }
 
-  const id = req.body.id
+  const id = req.query.id as string
 
   if (!id) {
     res.status(400).json({ message: "Id not found." })
+    return
   }
 
   const rating = await prisma.rating.findUnique({
@@ -23,13 +25,42 @@ export default async function handler(
 
   if (rating === null) {
     res.status(404).json({ message: "Rating not found." })
+    return
   }
 
-  const deletdRating = await prisma.rating.delete({
+  const deletedRating = await prisma.rating.delete({
     where: {
       id,
     },
   })
 
-  res.status(200).json({ deletdRating })
+  const book = await prisma.book.findFirst({
+    where: {
+      id: rating.bookId,
+    },
+  })
+
+  if (!book) {
+    res.status(404).json({ message: "Book not found." })
+    return
+  }
+
+  const newNumberOfRatings = book.numberOfRatings - 1
+
+  const newFinalRating =
+    (book.finalRating * book.numberOfRatings - rating.rate) / newNumberOfRatings
+
+  await prisma.book.update({
+    where: {
+      id: rating.bookId,
+    },
+    data: {
+      numberOfRatings: {
+        decrement: 1,
+      },
+      finalRating: newFinalRating,
+    },
+  })
+
+  res.status(200).json({ deletdRating: deletedRating })
 }

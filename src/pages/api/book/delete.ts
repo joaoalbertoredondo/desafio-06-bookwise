@@ -10,7 +10,7 @@ export default async function handler(
     return
   }
 
-  const id = req.body.id
+  const id = req.query.id as string
 
   if (!id) {
     res.status(400).json({ message: "Id not found." })

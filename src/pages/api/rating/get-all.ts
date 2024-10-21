@@ -27,6 +27,18 @@ export default async function handler(
     res.status(501).json({ message: "Method not implemented." })
     return
   }
-  const ratings = await prisma.rating.findMany()
+
+  const ratingId = req.query.id as string
+
+  const ratings = await prisma.rating.findMany({
+    where: {
+      id: ratingId,
+    },
+    include: {
+      Book: {},
+      User: {},
+    },
+  })
+
   res.status(200).json({ ratings, count: ratings.length })
 }

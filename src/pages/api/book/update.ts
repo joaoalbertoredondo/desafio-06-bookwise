@@ -7,6 +7,7 @@ export default async function handler(
 ) {
   if (req.method !== "PATCH") {
     res.status(501).json({ message: "Method not implemented." })
+    return
   }
 
   const { id, name, author, summary, category, coverUrl, totalPages } = req.body

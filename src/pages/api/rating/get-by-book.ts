@@ -25,6 +25,7 @@ export default async function handler(
 ) {
   if (req.method !== "GET") {
     res.status(501).json({ message: "Method not implemented." })
+    return
   }
 
   const bookId = req.query.bookId as string

@@ -14,6 +14,7 @@ export default async function handler(
 
   if (!username) {
     res.status(400).json({ message: "Username is requeired." })
+    return
   }
 
   const user = await prisma.user.findUnique({

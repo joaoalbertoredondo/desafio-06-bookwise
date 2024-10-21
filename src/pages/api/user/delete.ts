@@ -7,9 +7,10 @@ export default async function handler(
 ) {
   if (req.method !== "DELETE") {
     res.status(501).json("Method not implemented.")
+    return
   }
 
-  const id = req.body.id
+  const id = req.query.id as string
 
   if (!id) {
     res.status(400).json({ message: "Id not found." })

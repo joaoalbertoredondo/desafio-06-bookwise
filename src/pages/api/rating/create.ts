@@ -21,5 +21,43 @@ export default async function handler(
     },
   })
 
+  const book = await prisma.book.findFirst({
+    where: {
+      id: bookId,
+    },
+  })
+
+  if (!book) {
+    res.status(404).json({ message: "Book not found." })
+    return
+  }
+
+  const user = await prisma.user.findFirst({
+    where: {
+      id: userId,
+    },
+  })
+
+  if (!user) {
+    res.status(404).json({ message: "User not found." })
+    return
+  }
+
+  const newFinalRating =
+    (book.finalRating * book.numberOfRatings + rate) /
+    (book.numberOfRatings + 1)
+
+  await prisma.book.update({
+    where: {
+      id: bookId,
+    },
+    data: {
+      numberOfRatings: {
+        increment: 1,
+      },
+      finalRating: newFinalRating,
+    },
+  })
+
   res.status(201).json({ newRating })
 }

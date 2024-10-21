@@ -20,6 +20,11 @@ export default async function handler(
     where: {
       id: bookId,
     },
+    include: {
+      ratings: {
+        include: { User: {} },
+      },
+    },
   })
 
   if (book === null) {
