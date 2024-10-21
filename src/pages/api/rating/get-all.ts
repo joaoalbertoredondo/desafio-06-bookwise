@@ -1,19 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { prisma } from "../../../lib/prisma"
 
-type User = {
+type Rating = {
   id: string
-  name: string
-  username: string
-  email: string
-  emailVerified: Date | null
-  avatarUrl: string
+  rate: number
+  description: string
+  userId: string
+  bookId: string
   createdAt: Date
-  updatedAt: Date
 }
 
 type Data = {
-  users: User[]
+  ratings: Rating[]
   count: number
 }
 
@@ -29,6 +27,6 @@ export default async function handler(
     res.status(501).json({ message: "Method not implemented." })
     return
   }
-  const users = await prisma.user.findMany()
-  res.status(200).json({ users, count: users.length })
+  const ratings = await prisma.rating.findMany()
+  res.status(200).json({ ratings, count: ratings.length })
 }

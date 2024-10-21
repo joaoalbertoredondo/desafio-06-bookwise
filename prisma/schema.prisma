@@ -46,12 +46,12 @@ model Rating {
   id          String   @id @default(uuid())
   rate        Int
   description String
-  userId      String?
-  bookId      String?
+  userId      String
+  bookId      String
   createdAt   DateTime @default(now())
 
-  User User? @relation(fields: [userId], references: [id])
-  Book Book? @relation(fields: [bookId], references: [id])
+  User User @relation(fields: [userId], references: [id])
+  Book Book @relation(fields: [bookId], references: [id])
 
   @@map("ratings")
 }

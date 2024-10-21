@@ -29,11 +29,11 @@ CREATE TABLE "ratings" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "rate" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
-    "userId" TEXT,
-    "bookId" TEXT,
+    "userId" TEXT NOT NULL,
+    "bookId" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "ratings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT "ratings_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "books" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT "ratings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "ratings_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "books" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable

@@ -9,24 +9,24 @@ export default async function handler(
     res.status(501).json({ message: "Method not implemented." })
   }
 
-  const { id, name, username, email, avatarUrl } = req.body
+  const { id, rate, description, userId, bookId } = req.body
 
   if (!id) {
-    res.status(400).json({ message: "User ID is required." })
+    res.status(400).json({ message: "Rating ID is required." })
     return
   }
 
-  const updatedUser = await prisma.user.update({
+  const updatedRating = await prisma.rating.update({
     where: {
       id,
     },
     data: {
-      name,
-      username,
-      email,
-      avatarUrl,
+      rate,
+      description,
+      userId,
+      bookId,
     },
   })
 
-  res.status(200).json({ updatedUser })
+  res.status(200).json({ updatedRating })
 }

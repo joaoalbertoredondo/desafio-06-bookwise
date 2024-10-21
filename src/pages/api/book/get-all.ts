@@ -28,7 +28,8 @@ export default async function handler(
   res: NextApiResponse<Data | Error>
 ) {
   if (req.method !== "GET") {
-    res.status(501).json({ message: "Method not implemented" })
+    res.status(501).json({ message: "Method not implemented." })
+    return
   }
   const books = await prisma.book.findMany()
   res.status(200).json({ books, count: books.length })

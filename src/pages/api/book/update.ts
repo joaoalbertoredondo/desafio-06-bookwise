@@ -6,10 +6,22 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "PATCH") {
-    res.status(501).json({ message: "Method not implemented" })
+    res.status(501).json({ message: "Method not implemented." })
   }
 
   const { id, name, author, summary, category, coverUrl, totalPages } = req.body
+
+  if (!id) {
+    res.status(400).json({ message: "Book ID is required." })
+    return
+  }
+
+  console.log({ keys: Object.keys(req.body) })
+
+  if (Object.keys(req.body).length === 1 && !!req.body.id) {
+    res.status(400).json({ message: "No changes made." })
+    return
+  }
 
   const updatedBook = await prisma.book.update({
     where: {
@@ -24,10 +36,6 @@ export default async function handler(
       totalPages,
     },
   })
-
-  if (!id) {
-    return res.status(400).json({ message: "Book ID is required." })
-  }
 
   res.status(200).json({ updatedBook })
 }

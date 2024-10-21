@@ -6,32 +6,30 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "DELETE") {
-    res.status(501).json("Method not implemented.")
+    res.status(501).json({ message: "Method not implemented." })
   }
 
   const id = req.body.id
 
   if (!id) {
     res.status(400).json({ message: "Id not found." })
-    return
   }
 
-  const user = await prisma.user.findUnique({
+  const rating = await prisma.rating.findUnique({
     where: {
       id,
     },
   })
 
-  if (user === null) {
-    res.status(404).json({ message: "User not found." })
-    return
+  if (rating === null) {
+    res.status(404).json({ message: "Rating not found." })
   }
 
-  const deletedUser = await prisma.user.delete({
+  const deletdRating = await prisma.rating.delete({
     where: {
       id,
     },
   })
 
-  res.status(200).json({ deletedUser })
+  res.status(200).json({ deletdRating })
 }

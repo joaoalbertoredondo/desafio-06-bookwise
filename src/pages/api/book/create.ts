@@ -7,6 +7,7 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     res.status(501).json({ messgae: "Method not implemented." })
+    return
   }
 
   const { name, author, summary, category, coverUrl, totalPages } = req.body
@@ -21,7 +22,8 @@ export default async function handler(
   )
 
   if (errors.length) {
-    res.status(400).json({ message: "Bad Request", errors })
+    res.status(400).json({ message: "Bad Request.", errors })
+    return
   }
 
   const newBook = await prisma.book.create({
@@ -49,27 +51,27 @@ function validateBody(
   let errors = []
 
   if (typeof name !== "string" || name.length === 0) {
-    errors.push("Name must be a valid string")
+    errors.push("Name must be a valid string.")
   }
 
   if (typeof author !== "string" || author.length === 0) {
-    errors.push("Username must be a valid string")
+    errors.push("Username must be a valid string.")
   }
 
   if (typeof summary !== "string" || summary.length === 0) {
-    errors.push("E-mail must be a valid string")
+    errors.push("E-mail must be a valid string.")
   }
 
   if (typeof category !== "string" || category.length === 0) {
-    errors.push("AvatarUrl must be a valid string")
+    errors.push("AvatarUrl must be a valid string.")
   }
 
   if (typeof coverUrl !== "string" || coverUrl.length === 0) {
-    errors.push("AvatarUrl must be a valid string")
+    errors.push("AvatarUrl must be a valid string.")
   }
 
   if (typeof totalPages !== "number" || totalPages === 0) {
-    errors.push("AvatarUrl must be a valid string")
+    errors.push("AvatarUrl must be a valid string.")
   }
 
   return errors

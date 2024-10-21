@@ -15,5 +15,5 @@
 
 - [] create api routes
   - [x] user
-  - [] book
+  - [x] book
   - [] rating

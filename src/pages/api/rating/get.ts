@@ -10,24 +10,17 @@ export default async function handler(
     return
   }
 
-  const username = req.query.username as string
+  const ratingId = req.query.id as string
 
-  if (!username) {
-    res.status(400).json({ message: "Username is requeired." })
+  if (!ratingId) {
+    res.status(400).json({ message: "Rating Id not provided." })
   }
 
-  const user = await prisma.user.findUnique({
+  const rating = await prisma.rating.findUnique({
     where: {
-      username: username,
-    },
-    include: {
-      ratings: {
-        include: {
-          Book: {},
-        },
-      },
+      id: ratingId,
     },
   })
 
-  res.status(200).json({ user })
+  res.status(200).json({ rating })
 }

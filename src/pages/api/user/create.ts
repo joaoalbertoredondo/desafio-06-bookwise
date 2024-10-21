@@ -6,7 +6,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "POST") {
-    res.status(501).json({ message: "Method not implemented" })
+    res.status(501).json({ message: "Method not implemented." })
+    return
   }
 
   const { name, username, email, avatarUrl } = req.body
@@ -14,7 +15,8 @@ export default async function handler(
   const errors = validateBody(name, username, email, avatarUrl)
 
   if (errors.length) {
-    res.status(400).json({ message: "Bad Request", errors })
+    res.status(400).json({ message: "Bad Request.", errors })
+    return
   }
 
   const newUser = await prisma.user.create({
@@ -33,19 +35,19 @@ function validateBody(name: any, username: any, email: any, avatarUrl: any) {
   let errors = []
 
   if (typeof name !== "string" || name.length === 0) {
-    errors.push("Name must be a valid string")
+    errors.push("Name must be a valid string.")
   }
 
   if (typeof username !== "string" || username.length === 0) {
-    errors.push("Username must be a valid string")
+    errors.push("Username must be a valid string.")
   }
 
   if (typeof email !== "string" || email.length === 0) {
-    errors.push("E-mail must be a valid string")
+    errors.push("E-mail must be a valid string.")
   }
 
   if (typeof avatarUrl !== "string" || avatarUrl.length === 0) {
-    errors.push("AvatarUrl must be a valid string")
+    errors.push("AvatarUrl must be a valid string.")
   }
 
   return errors
