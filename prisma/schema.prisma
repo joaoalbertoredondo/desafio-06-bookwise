@@ -67,7 +67,7 @@ model Account {
   expiresAt         Int?
   tokenType         String?
   scope             String?
-  idToken           String
+  idToken           String?
   sessionState      String?
 
   user User @relation(fields: [userId], references: [id])

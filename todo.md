@@ -13,7 +13,7 @@
 
 - [x] create prisma adapter
 
-- [] create api routes
+- [x] create api routes
   - [x] user
   - [x] book
-  - [] rating
+  - [x] rating

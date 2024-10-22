@@ -6,8 +6,23 @@ import loginImg from "../../../public/assets/login-image.svg"
 import googleImg from "../../../public/assets/google.svg"
 import githubImg from "../../../public/assets/github.svg"
 import planeImg from "../../../public/assets/plane.svg"
+import { useRouter } from "next/router"
+import { signIn, useSession } from "next-auth/react"
 
 export default function Login() {
+  const router = useRouter()
+  const session = useSession()
+
+  const isSignedIn = session.status === "authenticated"
+
+  function handleSignIn(provider: "google") {
+    signIn(provider, { callbackUrl: "/feed" })
+  }
+
+  function handleGuestAccess() {
+    router.push("/feed")
+  }
+
   return (
     <LoginContainer>
       <Image src={loginImg} alt="" />
@@ -19,7 +34,7 @@ export default function Login() {
         </div>
 
         <ButtonsContainer>
-          <LoginButton>
+          <LoginButton onClick={() => handleSignIn("google")}>
             <Image src={googleImg} alt="" />
             Entrar com Google
           </LoginButton>
@@ -29,7 +44,7 @@ export default function Login() {
             Entrar com GitHub
           </LoginButton>
 
-          <LoginButton>
+          <LoginButton onClick={handleGuestAccess} disabled={isSignedIn}>
             <Image src={planeImg} alt="" />
             Acessar como visitante
           </LoginButton>

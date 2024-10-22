@@ -1,12 +1,14 @@
 import { Adapter } from "next-auth/adapters"
 import { prisma } from "../prisma"
+import { User, Account } from "@prisma/client"
 
 export function PrismaAdapter(): Adapter {
   return {
-    async createUser(user: any) {
+    async createUser(user: User) {
       const createdUser = await prisma.user.create({
         data: {
           name: user.name,
+          username: user.email.split("@")[0],
           email: user.email,
           avatarUrl: user.avatarUrl,
         },
@@ -15,6 +17,7 @@ export function PrismaAdapter(): Adapter {
       return {
         id: createdUser.id,
         name: createdUser.name,
+        username: createdUser.email.split("@")[0],
         email: createdUser.email,
         avatarUrl: createdUser.avatarUrl,
         emailVerified: null,
@@ -27,6 +30,10 @@ export function PrismaAdapter(): Adapter {
           id,
         },
       })
+
+      if (!user) {
+        return null
+      }
 
       return {
         id: user.id,
@@ -106,7 +113,7 @@ export function PrismaAdapter(): Adapter {
       }
     },
 
-    async linkAccount(account: any) {
+    async linkAccount(account: Account) {
       await prisma.account.create({
         data: {
           userId: account.userId,

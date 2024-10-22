@@ -48,7 +48,7 @@ CREATE TABLE "accounts" (
     "expiresAt" INTEGER,
     "tokenType" TEXT,
     "scope" TEXT,
-    "idToken" TEXT NOT NULL,
+    "idToken" TEXT,
     "sessionState" TEXT,
     CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
