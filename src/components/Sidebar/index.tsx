@@ -18,17 +18,14 @@ import {
   User as UserIcon,
 } from "@phosphor-icons/react"
 import { usePathname } from "next/navigation"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/router"
+import { signOut, useSession } from "next-auth/react"
 import { Avatar } from "../Avatar"
+import * as Dialog from "@radix-ui/react-dialog"
+import { LoginModal } from "../LoginModal"
 
 export default function Sidebar() {
   const path = usePathname()
   const session = useSession()
-  const router = useRouter()
-  // const [user, setUser] = useState<User>()
-
-  // const { username } = router.query
 
   const isSignedIng = session.status === "authenticated"
 
@@ -44,16 +41,6 @@ export default function Sidebar() {
       text: "Explorar",
     },
   ]
-
-  // useEffect(() => {
-  //   if (!username) {
-  //     return
-  //   }
-
-  //   axios.get(`/api/user/get?username=${username}`).then((response) => {
-  //     setUser(response.data.user)
-  //   })
-  // }, [])
 
   return (
     <SidebarContainer>
@@ -92,18 +79,26 @@ export default function Sidebar() {
         </div>
 
         <footer>
-          {isSignedIng ? (
-            <button>
-              <Avatar image={session.data.user.avatarUrl} size={32} />
-              Logout
-              <SignOut size={24} color="#F75A68" />
-            </button>
-          ) : (
-            <button>
-              Fazer login
-              <SignIn size={24} color="#50B2C0" />
-            </button>
-          )}
+          <Dialog.Root>
+            {isSignedIng ? (
+              <button onClick={() => signOut()}>
+                <Avatar image={session.data.user.avatarUrl} size={32} />
+                Logout
+                <SignOut size={24} color="#F75A68" />
+              </button>
+            ) : (
+              <>
+                <Dialog.Trigger asChild>
+                  <button>
+                    Fazer login
+                    <SignIn size={24} color="#50B2C0" />
+                  </button>
+                </Dialog.Trigger>
+
+                <LoginModal />
+              </>
+            )}
+          </Dialog.Root>
         </footer>
       </SidebarContent>
     </SidebarContainer>

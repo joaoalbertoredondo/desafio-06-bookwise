@@ -39,6 +39,8 @@ export const SidebarContent = styled("div", {
     ">button": {
       all: "unset",
 
+      cursor: "pointer",
+
       display: "flex",
       alignItems: "center",
       gap: "0.75rem",
