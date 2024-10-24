@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+/** @type {import("next").NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -6,6 +6,6 @@ const nextConfig = {
 
 module.exports = {
   images: {
-    domains: ['lh3.googleusercontent.com', 'i.pinimg.com']
+    domains: ["lh3.googleusercontent.com", "i.pinimg.com", "static.wikia.nocookie.net", "avatarfiles.alphacoders.com", "xquality.com.br"]
   },
 };

@@ -11,6 +11,10 @@ export const globalStyles = globalCss({
     backgroundColor: "#0E1116",
     color: "#F8F9FC",
     "-webkit-font-smoothing": "antialiased",
+
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
   },
 
   "body, input, textarea, button": {

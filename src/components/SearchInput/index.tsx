@@ -3,11 +3,12 @@ import { SearchInputContainer } from "./styles"
 
 interface SearchInputprops {
   placeholder: string
+  size: "lg" | "md"
 }
 
-export function SearchInput({ placeholder }: SearchInputprops) {
+export function SearchInput({ placeholder, size }: SearchInputprops) {
   return (
-    <SearchInputContainer>
+    <SearchInputContainer size={size}>
       <input type="text" placeholder={placeholder} />
 
       <button>

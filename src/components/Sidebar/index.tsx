@@ -22,12 +22,27 @@ import { signOut, useSession } from "next-auth/react"
 import { Avatar } from "../Avatar"
 import * as Dialog from "@radix-ui/react-dialog"
 import { LoginModal } from "../LoginModal"
+import { useContext, useEffect } from "react"
+import axios from "axios"
+import { UserContext } from "../../contexts/UserContext"
 
 export default function Sidebar() {
   const path = usePathname()
   const session = useSession()
 
-  const isSignedIng = session.status === "authenticated"
+  const isSignedIn = session.status === "authenticated"
+  const { setUser, user } = useContext(UserContext)
+
+  useEffect(() => {
+    if (isSignedIn && !user) {
+      axios
+        .get(`/api/user/get-by-id?id=${session.data?.user.id}`)
+        .then((response) => {
+          console.log({ data: response.data })
+          setUser(response.data.user)
+        })
+    }
+  }, [isSignedIn])
 
   const navigationData = [
     {
@@ -68,7 +83,7 @@ export default function Sidebar() {
               )
             })}
 
-            {isSignedIng && (
+            {isSignedIn && (
               <NavButton href={"/profile"} isActive={path.includes("/profile")}>
                 {path && path.includes("/profile") && <Marker />}
                 <UserIcon size={24} />
@@ -80,8 +95,13 @@ export default function Sidebar() {
 
         <footer>
           <Dialog.Root>
-            {isSignedIng ? (
-              <button onClick={() => signOut()}>
+            {isSignedIn ? (
+              <button
+                onClick={() => {
+                  setUser(null)
+                  signOut()
+                }}
+              >
                 <Avatar image={session.data.user.avatarUrl} size={32} />
                 Logout
                 <SignOut size={24} color="#F75A68" />

@@ -7,7 +7,6 @@ export const SearchInputContainer = styled("div", {
   border: "1px solid $gray500",
   borderRadius: 4,
   padding: "14px 20px",
-  width: "39rem",
 
   input: {
     all: "unset",
@@ -29,6 +28,17 @@ export const SearchInputContainer = styled("div", {
 
     "&:hover": {
       color: "$gray400",
+    },
+  },
+
+  variants: {
+    size: {
+      lg: {
+        width: "39rem",
+      },
+      md: {
+        width: "27rem",
+      },
     },
   },
 })
