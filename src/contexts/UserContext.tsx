@@ -1,7 +1,5 @@
-import axios from "axios"
 import { User } from "next-auth"
-import { useRouter } from "next/router"
-import { createContext, ReactNode, useEffect, useState } from "react"
+import { createContext, ReactNode, useState } from "react"
 
 interface UserContextType {
   user?: User

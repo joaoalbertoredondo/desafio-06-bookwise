@@ -17,8 +17,6 @@ export default async function handler(
     return
   }
 
-  console.log({ keys: Object.keys(req.body) })
-
   if (Object.keys(req.body).length === 1 && !!req.body.id) {
     res.status(400).json({ message: "No changes made." })
     return

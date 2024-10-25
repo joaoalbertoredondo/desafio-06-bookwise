@@ -48,6 +48,14 @@ export const SidebarContent = styled("div", {
       lineHeight: "$base",
       fontSize: "$sm",
       color: "$gray200",
+
+      ">p": {
+        fontSize: "$sm",
+        lineHeight: "base",
+        maxWidth: 80,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+      },
     },
   },
 })

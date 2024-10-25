@@ -38,7 +38,6 @@ export default function Sidebar() {
       axios
         .get(`/api/user/get-by-id?id=${session.data?.user.id}`)
         .then((response) => {
-          console.log({ data: response.data })
           setUser(response.data.user)
         })
     }
@@ -103,14 +102,14 @@ export default function Sidebar() {
                 }}
               >
                 <Avatar image={session.data.user.avatarUrl} size={32} />
-                Logout
+                <p>{session.data.user.name}</p>
                 <SignOut size={24} color="#F75A68" />
               </button>
             ) : (
               <>
                 <Dialog.Trigger asChild>
                   <button>
-                    Fazer login
+                    <p>Fazer login</p>
                     <SignIn size={24} color="#50B2C0" />
                   </button>
                 </Dialog.Trigger>
