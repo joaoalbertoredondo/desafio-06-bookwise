@@ -23,6 +23,29 @@ export const ProfileContent = styled("div", {
     },
   },
 
+  ">button": {
+    all: "unset",
+
+    display: "flex",
+    alignItems: "center",
+    gap: "0.25rem",
+
+    cursor: "pointer",
+    borderRadius: 4,
+    width: "fit-content",
+    padding: "0.25rem 0.5rem",
+    color: "$gray200",
+    fontWeight: "$bold",
+    lineHeight: 0,
+    fontSize: "$md",
+    marginTop: "3.5rem",
+    marginBottom: "2.74rem",
+
+    "&:hover": {
+      backgroundColor: "$gray700",
+    },
+  },
+
   ">div": {
     display: "flex",
     gap: "4rem",

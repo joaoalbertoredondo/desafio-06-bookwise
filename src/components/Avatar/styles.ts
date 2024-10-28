@@ -8,6 +8,9 @@ export const AvatarContainer = styled("div", {
   padding: 2,
   overflow: "hidden",
 
+  height: "fit-content",
+  width: "fit-content",
+
   img: {
     borderRadius: "$full",
   },

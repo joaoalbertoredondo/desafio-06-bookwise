@@ -25,15 +25,19 @@ import { LoginModal } from "../LoginModal"
 import { useContext, useEffect } from "react"
 import axios from "axios"
 import { UserContext } from "../../contexts/UserContext"
+import { useRouter } from "next/router"
 
 export default function Sidebar() {
   const path = usePathname()
   const session = useSession()
+  const router = useRouter()
 
   const isSignedIn = session.status === "authenticated"
   const { setUser, user } = useContext(UserContext)
 
   useEffect(() => {
+    const { username } = router.query
+
     if (isSignedIn && !user) {
       axios
         .get(`/api/user/get-by-id?id=${session.data?.user.id}`)
@@ -41,7 +45,13 @@ export default function Sidebar() {
           setUser(response.data.user)
         })
     }
-  }, [isSignedIn])
+
+    if (!isSignedIn && username) {
+      axios.get(`/api/user/get?username=${username}`).then((response) => {
+        setUser(response.data.user)
+      })
+    }
+  }, [isSignedIn, router.query])
 
   const navigationData = [
     {

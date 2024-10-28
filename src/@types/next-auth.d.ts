@@ -10,6 +10,21 @@ declare module "next-auth" {
     createdAt: Date
   }
 
+  export interface Book {
+    map(arg0: (book: any) => false | import("react").JSX.Element): import("react").ReactNode
+    id: string
+    name: string
+    author: string
+    summary: string
+    category: string
+    coverUrl: string
+    createdAt: Date
+    totalPages: number
+    finalRating: number
+    numberOfRatings: number
+    ratings?: any
+  }
+
   interface Session {
     user: User
   }

@@ -27,7 +27,10 @@ export function UserInfo() {
     }
   }, [user])
 
+  console.log("user:", userInfo)
+
   const handlePlural = userInfo?.ratings?.length === 1 ? "" : "s"
+
   const totalPages = userInfo?.ratings?.reduce(
     (total: any, user: any) => total + user.Book.totalPages,
     0

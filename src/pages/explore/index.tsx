@@ -1,11 +1,112 @@
+import { useEffect, useState } from "react"
 import Sidebar from "../../components/Sidebar"
-import { ExploreContainer } from "./styles"
+import {
+  BookCardContainer,
+  CategoriesContainer,
+  ExploreContainer,
+  ExploreContent,
+} from "./styles"
+import axios from "axios"
+import { Binoculars } from "@phosphor-icons/react"
+import { SearchInput } from "../../components/SearchInput"
+import { CategoryButton } from "./components/CategoryButton"
+import { BookCard } from "../../components/BookCard"
+import * as Dialog from "@radix-ui/react-dialog"
+import { BookModal } from "../../components/BookModal"
 
 export default function Explore() {
+  const categories = [
+    {
+      text: "Tudo",
+    },
+    {
+      text: "Computação",
+    },
+    {
+      text: "Educação",
+    },
+    {
+      text: "Fantasia",
+    },
+    {
+      text: "Ficção científica",
+    },
+    {
+      text: "Horror",
+    },
+    {
+      text: "HQs",
+    },
+    {
+      text: "Suspense",
+    },
+  ]
+
+  const [books, setBooks] = useState<any>([])
+  const [selectedBook, setSelectedBook] = useState<any>({})
+  const [selectedCategory, setSelectedCategory] = useState<string>("Tudo")
+
+  function handleSelectCategory(category: string) {
+    setSelectedCategory(category)
+  }
+
+  useEffect(() => {
+    axios.get("/api/book/get-all").then((response) => {
+      setBooks(response.data.books)
+    })
+  }, [])
+
+  const filteredBooks =
+    selectedCategory === "Tudo"
+      ? books
+      : books.filter((book: any) => book.category === selectedCategory)
+
   return (
     <ExploreContainer>
       <Sidebar />
-      <h1>Explore</h1>
+
+      <ExploreContent>
+        <header>
+          <div>
+            <Binoculars size={32} color="#50B2C0" />
+            <h1>Explore</h1>
+          </div>
+
+          <SearchInput size="md" placeholder="Buscar livro ou autor" />
+        </header>
+
+        <CategoriesContainer>
+          {categories.map((item) => {
+            return (
+              <CategoryButton
+                key={item.text}
+                isSelected={selectedCategory === item.text}
+                onClick={() => handleSelectCategory(item.text)}
+              >
+                {item.text}
+              </CategoryButton>
+            )
+          })}
+        </CategoriesContainer>
+
+        <BookCardContainer>
+          <Dialog.Root>
+            {filteredBooks.length > 0 ? (
+              filteredBooks.map((book: any) => (
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  setSelectedBook={setSelectedBook}
+                />
+              ))
+            ) : (
+              <p>Nenhum livro encontrado para a categoria selecionada.</p>
+            )}
+
+            <BookModal book={selectedBook} />
+          </Dialog.Root>
+        </BookCardContainer>
+      </ExploreContent>
     </ExploreContainer>
   )
 }

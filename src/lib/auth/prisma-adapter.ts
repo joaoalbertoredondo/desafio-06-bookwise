@@ -1,4 +1,4 @@
-import { Adapter } from "next-auth/adapters"
+import { Adapter, AdapterUser } from "next-auth/adapters"
 import { prisma } from "../prisma"
 import { User, Account } from "@prisma/client"
 
@@ -24,7 +24,7 @@ export function PrismaAdapter(): Adapter {
       }
     },
 
-    async getUser(id) {
+    async getUser(id): Promise<AdapterUser | null> {
       const user = await prisma.user.findUnique({
         where: {
           id,
@@ -40,11 +40,13 @@ export function PrismaAdapter(): Adapter {
         name: user.name,
         email: user.email,
         emailVerified: null,
+        username: user.username,
         avatarUrl: user.avatarUrl,
+        createdAt: user.createdAt,
       }
     },
 
-    async getUserByEmail(email) {
+    async getUserByEmail(email: string): Promise<AdapterUser | null> {
       const user = await prisma.user.findUnique({
         where: {
           email,
@@ -60,11 +62,16 @@ export function PrismaAdapter(): Adapter {
         name: user.name,
         email: user.email,
         emailVerified: null,
+        username: user.username,
         avatarUrl: user.avatarUrl,
+        createdAt: user.createdAt,
       }
     },
 
-    async getUserByAccount({ providerAccountId, provider }) {
+    async getUserByAccount({
+      providerAccountId,
+      provider,
+    }): Promise<AdapterUser | null> {
       const account = await prisma.account.findUnique({
         where: {
           provider_providerAccountId: {
@@ -86,13 +93,15 @@ export function PrismaAdapter(): Adapter {
       return {
         id: user.id,
         name: user.name,
-        email: user.email!,
+        email: user.email,
         emailVerified: null,
+        username: user.username,
         avatarUrl: user.avatarUrl,
+        createdAt: user.createdAt,
       }
     },
 
-    async updateUser(user) {
+    async updateUser(user): Promise<AdapterUser> {
       const prismaUser = await prisma.user.update({
         where: {
           id: user.id,
@@ -108,8 +117,10 @@ export function PrismaAdapter(): Adapter {
         id: prismaUser.id,
         name: prismaUser.name,
         email: prismaUser.email,
+        username: prismaUser.username,
         emailVerified: null,
         avatarUrl: prismaUser.avatarUrl,
+        createdAt: prismaUser.createdAt,
       }
     },
 
@@ -145,22 +156,15 @@ export function PrismaAdapter(): Adapter {
       }
     },
 
-    async getSessionAndUser(sessionToken) {
+    async getSessionAndUser(sessionToken: string) {
       const prismaSession = await prisma.session.findUnique({
-        where: {
-          sessionToken: sessionToken,
-        },
-        include: {
-          user: true,
-        },
+        where: { sessionToken },
+        include: { user: true },
       })
 
-      if (!prismaSession) {
-        return null
-      }
+      if (!prismaSession) return null
 
       const { user, ...session } = prismaSession
-
       return {
         session: {
           userId: session.userId,
@@ -173,6 +177,8 @@ export function PrismaAdapter(): Adapter {
           email: user.email!,
           emailVerified: null,
           avatarUrl: user.avatarUrl,
+          username: user.username,
+          createdAt: user.createdAt,
         },
       }
     },

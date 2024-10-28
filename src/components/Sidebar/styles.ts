@@ -48,6 +48,12 @@ export const SidebarContent = styled("div", {
       lineHeight: "$base",
       fontSize: "$sm",
       color: "$gray200",
+      padding: "0.25rem 0.5rem",
+      borderRadius: 4,
+
+      "&:hover": {
+        backgroundColor: "$gray700",
+      },
 
       ">p": {
         fontSize: "$sm",
