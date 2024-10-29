@@ -28,12 +28,6 @@ export default async function handler(
     return
   }
 
-  const deletedRating = await prisma.rating.delete({
-    where: {
-      id,
-    },
-  })
-
   const book = await prisma.book.findFirst({
     where: {
       id: rating.bookId,
@@ -48,19 +42,28 @@ export default async function handler(
   const newNumberOfRatings = book.numberOfRatings - 1
 
   const newFinalRating =
-    (book.finalRating * book.numberOfRatings - rating.rate) / newNumberOfRatings
+    newNumberOfRatings === 0
+      ? 0
+      : (book.finalRating * book.numberOfRatings - rating.rate) /
+        newNumberOfRatings
 
-  await prisma.book.update({
-    where: {
-      id: rating.bookId,
-    },
-    data: {
-      numberOfRatings: {
-        decrement: 1,
+  await Promise.all([
+    prisma.book.update({
+      where: {
+        id: rating.bookId,
       },
-      finalRating: newFinalRating,
-    },
-  })
+      data: {
+        numberOfRatings: newNumberOfRatings,
+        finalRating: newFinalRating,
+      },
+    }),
 
-  res.status(200).json({ deletdRating: deletedRating })
+    prisma.rating.delete({
+      where: {
+        id,
+      },
+    }),
+  ])
+
+  res.status(200).json({ success: true })
 }

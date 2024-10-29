@@ -171,6 +171,10 @@ export const Reviews = styled("div", {
   display: "flex",
   flexDirection: "column",
   gap: "0.75rem",
+
+  form: {
+    width: "100%",
+  },
 })
 
 export const ReviewCard = styled("div", {
@@ -198,6 +202,24 @@ export const ReviewCard = styled("div", {
         fontSize: "$sm",
         lineHeight: "$base",
         color: "$gray400",
+      },
+    },
+
+    ">div": {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "end",
+      gap: "1rem",
+
+      ">button": {
+        all: "unset",
+        cursor: "pointer",
+        lineHeight: 0,
+        color: "#F75A68",
+
+        "&:hover": {
+          color: "#ff717d",
+        },
       },
     },
   },

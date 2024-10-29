@@ -2,7 +2,7 @@ import {
   BookmarkSimple,
   BookOpen,
   Check,
-  TrayArrowUp,
+  Trash,
   X,
 } from "@phosphor-icons/react"
 import {
@@ -28,18 +28,27 @@ import { ptBR } from "date-fns/locale/pt-BR"
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow"
 import { LoginModal } from "../LoginModal"
 import { useSession } from "next-auth/react"
-import { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { NewRate } from "../NewRate"
+import axios from "axios"
 
 interface BookModalProps {
   book: Book
+  setRefetch: (value: boolean) => void
+  refetch: boolean
 }
 
-export function BookModal({ book }: BookModalProps) {
+export function BookModal({ book, refetch, setRefetch }: BookModalProps) {
   const [showLeaveReview, setShowLeaveReview] = useState(false)
+  const [newReview, setNewReview] = useState("")
+  const [newRate, setNewRate] = useState(0)
   const session = useSession()
 
   const isSignedIn = session.status === "authenticated"
+
+  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewReview(event.target.value)
+  }
 
   function handleLeaveReview() {
     setShowLeaveReview(true)
@@ -49,7 +58,44 @@ export function BookModal({ book }: BookModalProps) {
     setShowLeaveReview(false)
   }
 
-  console.log("book:", book)
+  function handleRateChange(rate: number) {
+    setNewRate(rate)
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const submittedReview = {
+      rate: newRate,
+      description: newReview,
+      userId: session.data?.user?.id,
+      bookId: book.id,
+    }
+
+    try {
+      await axios.post(
+        "http://localhost:3000/api/rating/create",
+        submittedReview
+      )
+      setNewReview("")
+      setNewRate(0)
+      setShowLeaveReview(false)
+      setRefetch(!refetch)
+    } catch (error) {
+      console.error("Error submitting review:", error)
+    }
+  }
+
+  async function handleDeleteReview(reviewId: string) {
+    try {
+      await axios.delete(
+        `http://localhost:3000/api/rating/delete?id=${reviewId}`
+      )
+      setRefetch(!refetch)
+    } catch (error) {
+      console.error("Error deleting review:", error)
+    }
+  }
 
   return (
     <Dialog.Portal>
@@ -115,6 +161,7 @@ export function BookModal({ book }: BookModalProps) {
                   <Dialog.Trigger asChild>
                     <button>Avaliar</button>
                   </Dialog.Trigger>
+
                   <LoginModal />
                 </Dialog.Root>
               ))}
@@ -122,28 +169,34 @@ export function BookModal({ book }: BookModalProps) {
 
           <Reviews>
             {showLeaveReview === true && (
-              <LeaveReview>
-                <header>
-                  <section>
-                    <Avatar image={session.data?.user.avatarUrl} size={40} />
+              <form onSubmit={handleSubmit}>
+                <LeaveReview>
+                  <header>
+                    <section>
+                      <Avatar image={session.data?.user.avatarUrl} size={40} />
 
-                    <h4>{session.data?.user.name}</h4>
-                  </section>
+                      <h4>{session.data?.user.name}</h4>
+                    </section>
 
-                  <NewRate  />
-                </header>
+                    <NewRate onRateChange={handleRateChange} />
+                  </header>
 
-                <textarea placeholder="Escreva sua avaliação" />
+                  <textarea
+                    placeholder="Escreva sua avaliação"
+                    value={newReview}
+                    onChange={handleTextChange}
+                  />
 
-                <ButtonsContainer>
-                  <button onClick={handleCloseLeaveReview}>
-                    <X size={24} color="#8381D9" />
-                  </button>
-                  <button>
-                    <Check size={24} color="#50B2C0" />
-                  </button>
-                </ButtonsContainer>
-              </LeaveReview>
+                  <ButtonsContainer>
+                    <button onClick={handleCloseLeaveReview}>
+                      <X size={24} color="#8381D9" />
+                    </button>
+                    <button type="submit">
+                      <Check size={24} color="#50B2C0" />
+                    </button>
+                  </ButtonsContainer>
+                </LeaveReview>
+              </form>
             )}
 
             {book.ratings
@@ -159,7 +212,7 @@ export function BookModal({ book }: BookModalProps) {
                 })
 
                 return (
-                  <ReviewCard key={book.id}>
+                  <ReviewCard key={rating.id}>
                     <header>
                       <Avatar image={rating.User.avatarUrl} size={40} />
 
@@ -168,7 +221,15 @@ export function BookModal({ book }: BookModalProps) {
                         <p>{formattedDate}</p>
                       </section>
 
-                      <Rating rate={rating.rate} />
+                      <div>
+                        <Rating rate={rating.rate} />
+
+                        {session.data?.user.id === rating.User.id && (
+                          <button onClick={() => handleDeleteReview(rating.id)}>
+                            <Trash />
+                          </button>
+                        )}
+                      </div>
                     </header>
 
                     <span>{rating.description}</span>

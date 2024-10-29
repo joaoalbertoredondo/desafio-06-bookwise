@@ -45,6 +45,7 @@ export default function Explore() {
   const [books, setBooks] = useState<any>([])
   const [selectedBook, setSelectedBook] = useState<any>({})
   const [selectedCategory, setSelectedCategory] = useState<string>("Tudo")
+  const [refetch, setRefetch] = useState(true)
 
   function handleSelectCategory(category: string) {
     setSelectedCategory(category)
@@ -53,8 +54,13 @@ export default function Explore() {
   useEffect(() => {
     axios.get("/api/book/get-all").then((response) => {
       setBooks(response.data.books)
+      if (Object.keys(selectedBook).length > 0) {
+        setSelectedBook(
+          response.data.books.find((book: any) => book.id === selectedBook.id)
+        )
+      }
     })
-  }, [])
+  }, [refetch])
 
   const filteredBooks =
     selectedCategory === "Tudo"
@@ -103,7 +109,11 @@ export default function Explore() {
               <p>Nenhum livro encontrado para a categoria selecionada.</p>
             )}
 
-            <BookModal book={selectedBook} />
+            <BookModal
+              book={selectedBook}
+              setRefetch={setRefetch}
+              refetch={refetch}
+            />
           </Dialog.Root>
         </BookCardContainer>
       </ExploreContent>
