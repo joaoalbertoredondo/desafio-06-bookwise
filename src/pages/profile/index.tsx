@@ -11,10 +11,17 @@ import { UserInfo } from "./components/UserInfo"
 import { RatedBookCard } from "./components/RatedBookCard"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
+import { useState } from "react"
 
 export default function Profile() {
+  const [searchTerm, setSearchTerm] = useState<string>("")
+
   const session = useSession()
   const router = useRouter()
+
+  function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(event.target.value)
+  }
 
   return (
     <ProfileContainer>
@@ -34,7 +41,12 @@ export default function Profile() {
 
         <div>
           <RatedBooksContainer>
-            <SearchInput size="lg" placeholder="Buscar livro avaliado" />
+            <SearchInput
+              size="lg"
+              placeholder="Buscar livro avaliado"
+              onChange={handleSearchChange}
+              value={searchTerm}
+            />
 
             <RatedBooksContent>
               <RatedBookCard />

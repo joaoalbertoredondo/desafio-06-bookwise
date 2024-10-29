@@ -191,6 +191,11 @@ export const ReviewCard = styled("div", {
     display: "flex",
     gap: "1rem",
 
+    ">button": {
+      all: "unset",
+      cursor: "pointer",
+    },
+
     ">section": {
       flex: 1,
 

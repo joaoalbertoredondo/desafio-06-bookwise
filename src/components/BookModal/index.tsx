@@ -28,9 +28,10 @@ import { ptBR } from "date-fns/locale/pt-BR"
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow"
 import { LoginModal } from "../LoginModal"
 import { useSession } from "next-auth/react"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { NewRate } from "../NewRate"
 import axios from "axios"
+import { useRouter } from "next/router"
 
 interface BookModalProps {
   book: Book
@@ -43,6 +44,7 @@ export function BookModal({ book, refetch, setRefetch }: BookModalProps) {
   const [newReview, setNewReview] = useState("")
   const [newRate, setNewRate] = useState(0)
   const session = useSession()
+  const router = useRouter()
 
   const isSignedIn = session.status === "authenticated"
 
@@ -60,6 +62,10 @@ export function BookModal({ book, refetch, setRefetch }: BookModalProps) {
 
   function handleRateChange(rate: number) {
     setNewRate(rate)
+  }
+
+  function handleRedirectToProfile(username: string) {
+    router.push(`/profile?username=${username}`)
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -214,7 +220,13 @@ export function BookModal({ book, refetch, setRefetch }: BookModalProps) {
                 return (
                   <ReviewCard key={rating.id}>
                     <header>
-                      <Avatar image={rating.User.avatarUrl} size={40} />
+                      <button
+                        onClick={() =>
+                          handleRedirectToProfile(rating.User.username)
+                        }
+                      >
+                        <Avatar image={rating.User.avatarUrl} size={40} />
+                      </button>
 
                       <section>
                         <h4>{rating.User.name}</h4>

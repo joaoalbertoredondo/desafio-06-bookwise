@@ -46,9 +46,14 @@ export default function Explore() {
   const [selectedBook, setSelectedBook] = useState<any>({})
   const [selectedCategory, setSelectedCategory] = useState<string>("Tudo")
   const [refetch, setRefetch] = useState(true)
+  const [searchTerm, setSearchTerm] = useState<string>("")
 
   function handleSelectCategory(category: string) {
     setSelectedCategory(category)
+  }
+
+  function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(event.target.value)
   }
 
   useEffect(() => {
@@ -62,10 +67,15 @@ export default function Explore() {
     })
   }, [refetch])
 
-  const filteredBooks =
-    selectedCategory === "Tudo"
-      ? books
-      : books.filter((book: any) => book.category === selectedCategory)
+  const filteredBooks = books.filter((book: any) => {
+    const matchesCategory =
+      selectedCategory === "Tudo" || book.category === selectedCategory
+    const matchesSearch =
+      book.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase())
+
+    return matchesCategory && matchesSearch
+  })
 
   return (
     <ExploreContainer>
@@ -78,7 +88,12 @@ export default function Explore() {
             <h1>Explore</h1>
           </div>
 
-          <SearchInput size="md" placeholder="Buscar livro ou autor" />
+          <SearchInput
+            size="md"
+            placeholder="Buscar livro ou autor"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
         </header>
 
         <CategoriesContainer>
