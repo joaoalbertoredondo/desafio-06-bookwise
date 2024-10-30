@@ -14,7 +14,11 @@ import { formatDistanceToNow } from "date-fns/formatDistanceToNow"
 import { Rating } from "../../../../components/Rating"
 import { useSession } from "next-auth/react"
 
-export function RatedBookCard() {
+interface RatedBookCardProps {
+  searchTerm: string
+}
+
+export function RatedBookCard({ searchTerm }: RatedBookCardProps) {
   const [userInfo, setUserInfo] = useState<any>({})
   const { user } = useContext(UserContext)
   const router = useRouter()
@@ -49,9 +53,20 @@ export function RatedBookCard() {
     }
   }, [user])
 
+  const filteredRatings = userInfo?.ratings?.filter((rating: any) => {
+    const bookName = rating.Book.name.toLowerCase()
+    const bookAuthor = rating.Book.author.toLowerCase()
+    const lowerCaseSearchTerm = searchTerm.toLowerCase()
+
+    return (
+      bookName.includes(lowerCaseSearchTerm) ||
+      bookAuthor.includes(lowerCaseSearchTerm)
+    )
+  })
+
   return (
     <RatedBookCardContainer>
-      {userInfo?.ratings
+      {filteredRatings
         ?.sort(
           (a: any, b: any) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

@@ -23,12 +23,6 @@ export const SearchInputContainer = styled("div", {
     all: "unset",
     lineHeight: 0,
     color: "$gray500",
-
-    cursor: "pointer",
-
-    "&:hover": {
-      color: "$gray400",
-    },
   },
 
   variants: {

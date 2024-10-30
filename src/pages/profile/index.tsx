@@ -49,7 +49,7 @@ export default function Profile() {
             />
 
             <RatedBooksContent>
-              <RatedBookCard />
+              <RatedBookCard searchTerm={searchTerm} />
             </RatedBooksContent>
           </RatedBooksContainer>
 
