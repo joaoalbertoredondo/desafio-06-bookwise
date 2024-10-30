@@ -43,7 +43,7 @@ export default function UserLastReading() {
             addSuffix: true,
           })} */}
             <p>{lastRating?.createdAt}</p>
-            <Rating rate={lastRating?.Book?.finalRating} />
+            <Rating rate={lastRating?.Book?.finalRating} size={16} />
           </header>
 
           <div>

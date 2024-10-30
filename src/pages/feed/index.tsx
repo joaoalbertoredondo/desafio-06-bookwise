@@ -15,6 +15,7 @@ import { useRouter } from "next/router"
 import { BookCard } from "../../components/BookCard"
 import * as Dialog from "@radix-ui/react-dialog"
 import { BookModal } from "../../components/BookModal"
+import { useSession } from "next-auth/react"
 
 export default function Feed() {
   const [ratings, setRatings] = useState<any>([])
@@ -23,6 +24,9 @@ export default function Feed() {
   const [refetch, setRefetch] = useState(true)
 
   const router = useRouter()
+  const session = useSession()
+
+  const isSignedIn = session.status === "authenticated"
 
   function handleViewAllUserReviews() {
     router.push("/profile")
@@ -65,17 +69,20 @@ export default function Feed() {
 
         <div>
           <section>
-            <UserLastReadingContainer>
-              <div>
-                <p>Sua última leitura</p>
-                <button onClick={handleViewAllUserReviews}>
-                  Ver todas
-                  <CaretRight weight="bold" />
-                </button>
-              </div>
+            {isSignedIn && (
+              <UserLastReadingContainer>
+                <div>
+                  <p>Sua última leitura</p>
 
-              <UserLastReading />
-            </UserLastReadingContainer>
+                  <button onClick={handleViewAllUserReviews}>
+                    Ver todas
+                    <CaretRight weight="bold" />
+                  </button>
+                </div>
+
+                <UserLastReading />
+              </UserLastReadingContainer>
+            )}
 
             <LatestReviewsContainer>
               <div>
@@ -106,6 +113,7 @@ export default function Feed() {
             {books
               .filter((book: any) => book.numberOfRatings > 0)
               .sort((a: any, b: any) => b.numberOfRatings - a.numberOfRatings)
+              .slice(0, 4)
               .map((book: any) => (
                 <Dialog.Root>
                   <BookCard

@@ -124,7 +124,7 @@ export default function Sidebar() {
                   </button>
                 </Dialog.Trigger>
 
-                <LoginModal />
+                <LoginModal showLeaveReview={false} />
               </>
             )}
           </Dialog.Root>

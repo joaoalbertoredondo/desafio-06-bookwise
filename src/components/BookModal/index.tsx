@@ -168,7 +168,7 @@ export function BookModal({ book, refetch, setRefetch }: BookModalProps) {
                     <button>Avaliar</button>
                   </Dialog.Trigger>
 
-                  <LoginModal />
+                  <LoginModal showLeaveReview />
                 </Dialog.Root>
               ))}
           </div>

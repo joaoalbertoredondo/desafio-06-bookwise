@@ -8,7 +8,11 @@ import gitHub from "../../../public/assets/github.svg"
 import { signIn } from "next-auth/react"
 import { LoginButton } from "../LoginButton"
 
-export function LoginModal() {
+interface LoginMOdalProps {
+  showLeaveReview: boolean
+}
+
+export function LoginModal({ showLeaveReview }: LoginMOdalProps) {
   function handleSignIn(provider: "google") {
     signIn(provider, { callbackUrl: "/feed" })
   }
@@ -23,7 +27,7 @@ export function LoginModal() {
         </DialogClose>
 
         <Content>
-          <span>Faça login para deixar sua avaliação</span>
+          {showLeaveReview && <span>Faça login para deixar sua avaliação</span>}
 
           <ButtonsContainer>
             <LoginButton onClick={() => handleSignIn("google")}>
